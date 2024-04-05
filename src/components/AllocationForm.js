@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AllocationForm = (props) => {
-    const { dispatch, remaining } = useContext(AppContext);
+    const { dispatch, remaining, currency } = useContext(AppContext);
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
@@ -15,7 +15,7 @@ const AllocationForm = (props) => {
         function isNumeric(str) {
             if (typeof str != "string") return false // we only process strings!  
             return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-                   !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+                !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
         }
 
         if (!isNumeric(cost)) {
@@ -25,7 +25,7 @@ const AllocationForm = (props) => {
         }
 
         if (cost > remaining) {
-            alert("The value cannot exceed remaining funds  £" + remaining);
+            alert("The value cannot exceed remaining funds  " + currency + "" + remaining);
             setCost("");
             return;
         }
@@ -72,16 +72,17 @@ const AllocationForm = (props) => {
                         <option defaultValue value="Add" name="Add">Add</option>
                         <option value="Reduce" name="Reduce">Reduce</option>
                     </select>
-
-                    <input
-                        required='required'
-                        type='number'
-                        id='cost'
-                        value={cost}
-                        style={{ marginLeft: '2rem', size: 10 }}
-                        onChange={(event) => setCost(event.target.value)}>
-                    </input>
-
+                    <div>
+                        <span class="input-group-prepend" style={{ marginLeft: '2rem' }}>{currency}</span>
+                        <input
+                            required='required'
+                            type='number'
+                            id='cost'
+                            value={cost}
+                            style={{ marginLeft: '1rem', size: 10 }}
+                            onChange={(event) => setCost(event.target.value)}>
+                        </input>
+                    </div>
                     <button className="btn btn-primary" onClick={submitEvent} style={{ marginLeft: '2rem' }}>
                         Save
                     </button>
